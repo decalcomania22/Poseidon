@@ -1,4 +1,6 @@
 const { MongoClient } = require('mongodb');
+const express = require('express');
+const path = require('path');
 const uri = 'mongodb://localhost:27017/companydb'; 
 const dbName = 'companydb';
 const collectionName = 'market';
