@@ -1,14 +1,14 @@
 const express = require("express");
-const mongoose = require('mongodb');
+const mongoose = require('mongoose');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const compSearch = require("./routes/compSearh.js");
+const companySearch = require("./routes/compSearch.js");
 
 dotenv.config();
 
 const app = express();
-const port = 5000;
+const port =process.env.PORT|| 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -23,7 +23,7 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
-//app.use("/api/blogs", compSerahc);
+app.use("/api/company", companySearch);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
