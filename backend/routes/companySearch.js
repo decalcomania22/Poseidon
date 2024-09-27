@@ -1,10 +1,10 @@
 const express = require('express');
 const path = require('path');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 
-const uri = 'mongodb://localhost:27017'; // Update this to your MongoDB URI
-const dbName = 'companyData'; // Name of your database
-const collectionName = 'financials'; // Name of your collection
+const uri = 'mongodb://localhost:27017'; 
+const dbName = 'companydb';
+const collectionName = 'poseidon'; 
 
 const app = express();
 const port = 3000;
@@ -38,7 +38,7 @@ app.get('/search', async (req, res) => {
 });
 
 // Endpoint to get unique company names by country
-app.get('/unique-companies', async (req, res) => {
+app.get('/companies', async (req, res) => {
     const countryName = req.query.country;
 
     try {
@@ -58,7 +58,7 @@ app.get('/unique-companies', async (req, res) => {
 
 // Function to connect to MongoDB and retrieve company data
 async function getCompanyData(companyName) {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new mongoose(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
     try {
         await client.connect();
@@ -76,7 +76,7 @@ async function getCompanyData(companyName) {
 
 // Function to retrieve unique company names from the specified country
 async function getUniqueCompaniesByCountry(countryName) {
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new mongoose(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
     try {
         await client.connect();
@@ -184,3 +184,5 @@ function generateTable(data) {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+module.exports = getCompanyData;

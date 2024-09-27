@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const companySearch = require("./routes/compSearch.js");
+const countrySearch = require("./routes/searchResult.js");
+const companySearch = require("./routes/companySearch.js")
+const { connectToDatabase, getDatabase } = require('./db');
 
 dotenv.config();
 
@@ -23,36 +25,9 @@ mongoose
   .catch((err) => console.log(err));
 
 // Routes
-app.use("/api/company", companySearch);
+app.use("/api/country", countrySearch);
+app.use("/api/company",companySearch);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-// // backend/server.js
-
-const express = require('express');
-const { connectToDatabase, getDatabase } = require('./db');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware to parse JSON requests
-app.use(express.json());
-
-// Connect to the database
-const startServer = async () => {
-    await connectToDatabase(); // Connect to the database
-
-//  
-  
-
-   
-
-    // Start the server
-    app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
-};
-
-// // Start the server
-startServer().catch(console.error);
