@@ -2,10 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-
 body {
-    background: linear-gradient(to bottom, #000000, #222222);
-    min-height: 100vh;
+  background: linear-gradient(to bottom, #000000, #222222);
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
