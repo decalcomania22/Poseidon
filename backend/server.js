@@ -4,7 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const path= require("path")
-const companySearch = require("./routes/companySearch.js");
+const companySearch = require("./routes/companyInD.js");
 const countrySearch = require("./routes/searchResult.js");
 //const { connectToDatabase, getDatabase } = require('./db.js');
 

@@ -2,20 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Company Data</title>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Search</h1>
-        <form action="/search" method="GET">
-            <div class="form-group">
-                <label for="query">Enter your search query:</label>
-                <input type="text" class="form-control" id="query" name="query" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+    <h1>Search for Company Data</h1>
+    <form action="/search" method="get">
+        <input type="text" name="company" placeholder="Enter company name" required>
+        <button type="submit">Search</button>
+    </form>
+    
+    <div>
+        <%= results %> <!-- Ensure this line is present to render results -->
     </div>
 </body>
 </html>

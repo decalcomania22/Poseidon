@@ -70,9 +70,9 @@ function convertStringToNumbers(company) {
             if (fields[year] === "n/a") {
                 numericValues.push(null); // Use null to identify missing values
             } else {
-                console.log('Before cleaning:', fields[year]);
+                //console.log('Before cleaning:', fields[year]);
                 const number = clean(fields[year]);
-                console.log('After cleaning:', number);
+                //console.log('After cleaning:', number);
                 numericValues.push(number);
                 fields[year] = number; // Update the field to the cleaned number
             }
