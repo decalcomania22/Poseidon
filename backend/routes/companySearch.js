@@ -1,28 +1,21 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 
-const uri = 'mongodb://localhost:27017'; 
-const dbName = 'companydb';
-const collectionName = 'poseidon'; 
+const router = express.Router();
+const collectionName = 'poseidon';
 
-const app = express();
-const port = 3000;
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Serve the HTML file with the search form
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.render('index', { results: '' });
 });
 
 // Handle the search request and display results
-app.get('/search', async (req, res) => {
-    const companyName = req.query.companyName;
+router.get('/search', async (req, res) => {
+    const companyName = req.query.company;
+    console.log('Searching for company:', companyName); // Debugging log
 
     try {
         const companyData = await getCompanyData(companyName);
+        console.log('Company data retrieved:', companyData); // Check what is retrieved
 
         if (companyData.length === 0) {
             res.render('index', { results: `<p>No data found for ${companyName}</p>` });
@@ -37,69 +30,72 @@ app.get('/search', async (req, res) => {
     }
 });
 
-// Endpoint to get unique company names by country
-app.get('/companies', async (req, res) => {
-    const countryName = req.query.country;
-
-    try {
-        const uniqueCompanies = await getUniqueCompaniesByCountry(countryName);
-
-        if (uniqueCompanies.length === 0) {
-            res.send(`<p>No unique companies found for ${countryName}</p>`);
-            return;
-        }
-
-        res.send(`<p>Unique companies in ${countryName}: ${uniqueCompanies.join(', ')}</p>`);
-    } catch (error) {
-        console.error('Error:', error);
-        res.send(`<p>Error retrieving unique companies</p>`);
-    }
-});
-
 // Function to connect to MongoDB and retrieve company data
 async function getCompanyData(companyName) {
-    const client = new mongoose(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-        const companyData = await collection.find({ company: companyName }).toArray();
-        return calculateYearlyChanges(companyData.map(convertStringToNumbers));
-    } catch (err) {
-        console.error('Error retrieving data from MongoDB:', err);
-        throw err;
-    } finally {
-        await client.close();
-    }
+    const collection = mongoose.connection.collection(collectionName);
+    const companyData = await collection.find({ company: { $regex: new RegExp(companyName, "i") } }).toArray();
+    return calculateYearlyChanges(companyData.map(convertStringToNumbers));
 }
 
-// Function to retrieve unique company names from the specified country
-async function getUniqueCompaniesByCountry(countryName) {
-    const client = new mongoose(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// Function to clean values and convert shorthand financial representations
+function clean(val) {
+    if (typeof val === 'number') return val; // If already a number, no cleaning required
 
-    try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
-        const uniqueCompanies = await collection.distinct('company', { country: countryName });
-        return uniqueCompanies;
-    } catch (err) {
-        console.error('Error retrieving data from MongoDB:', err);
-        throw err;
-    } finally {
-        await client.close();
+    if (typeof val === 'string') {
+        // Remove non-numeric characters (e.g., "$", ",", etc.)
+        val = val.replace(/[^0-9.-MB]+/g, '');
+
+        if (val === '') return null; // If string was empty after cleaning
+
+        // Convert shorthand (M = million, B = billion)
+        if (val.endsWith('B')) {
+            return parseFloat(val.slice(0, -1)) * 1e9; // Convert "B" (billion) to number
+        } else if (val.endsWith('M')) {
+            return parseFloat(val.slice(0, -1)) * 1e6; // Convert "M" (million) to number
+        }
+
+        return parseFloat(val); // Convert remaining cleaned string to float
     }
+
+    return null; // Return null if input can't be cleaned
 }
 
 // Function to convert string values to numbers
 function convertStringToNumbers(company) {
     const convertFieldsToNumber = (fields) => {
+        const numericValues = [];
+
+        // First pass: Collect numeric values and convert strings to numbers
         for (const year in fields) {
-            fields[year] = parseFloat(fields[year]);
+            if (fields[year] === "n/a") {
+                numericValues.push(null); // Use null to identify missing values
+            } else {
+                console.log('Before cleaning:', fields[year]);
+                const number = clean(fields[year]);
+                console.log('After cleaning:', number);
+                numericValues.push(number);
+                fields[year] = number; // Update the field to the cleaned number
+            }
         }
+
+        // Calculate mean of numeric values
+        const mean = numericValues.filter(value => value !== null); // Filter out nulls
+        const sum = mean.reduce((acc, val) => acc + val, 0);
+        const meanValue = mean.length > 0 ? sum / mean.length : 0;
+
+        // Second pass: Replace "n/a" with the mean value
+        for (const year in fields) {
+            if (fields[year] === null) {
+                fields[year] = meanValue; // Replace with mean value
+            }
+        }
+
         return fields;
     };
+
+    // Assuming company has a structure where fields are years
+    // Call the function to convert fields
+    company.fields = convertFieldsToNumber(company.fields);
 
     return {
         ...company,
@@ -114,8 +110,8 @@ function convertStringToNumbers(company) {
 function calculateYearlyChanges(data) {
     return data.map((company) => {
         const result = [];
-        for (let i = 1; i < Object.keys(company.stockPrices).length; i++) {
-            const years = Object.keys(company.stockPrices);
+        const years = Object.keys(company.stockPrices);
+        for (let i = 1; i < years.length; i++) {
             result.push({
                 year: years[i],
                 stockPriceChange: calculateChange(company.stockPrices[years[i - 1]], company.stockPrices[years[i]]),
@@ -134,7 +130,7 @@ function calculateYearlyChanges(data) {
 
 // Helper function to calculate percentage change
 function calculateChange(prevValue, currentValue) {
-    if (prevValue === 0) return 0;
+    if (prevValue === null || prevValue === 0 || currentValue === null) return 0;
     return ((currentValue - prevValue) / prevValue * 100).toFixed(2);
 }
 
@@ -180,9 +176,5 @@ function generateTable(data) {
     return table;
 }
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
-module.exports = getCompanyData;
+// Export the router
+module.exports = router;

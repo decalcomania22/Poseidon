@@ -1,30 +1,32 @@
-const express = require("express");
-const Company = require("../model/company.js");
+const express = require('express');
+const mongoose = require('mongoose');
 
 const router = express.Router();
+const collectionName = 'poseidon';
 
-router.get('/searchresult', async (req, res) => {
+router.get('/search', async (req, res) => {
+  const countryName = req.query.country;
+
   try {
-      const db = getDatabase();
-      const collection = db.collection('poseidon');
-  
-          // Get the search term (searchtext) from query parameters
-          const { searchtext } = req.query;  
-  
-          // Use a regex to find companies that partially match the search text
-          const query = searchtext ? { company: { $regex: searchtext, $options: 'i' } } : {};
-  
-          // Search for matching companies
-          const data = await collection.find(query).toArray();
-  
-          res.json(data);  // Return the results as JSON
-          if (companies.length === 0) {
-            return res.status(404).json({ message: 'No companies found in this country.' });
-          }
-      } catch (error) {
-          console.error("Error fetching data:", error);
-          res.status(500).json({ message: 'Internal Server Error' });
-      }
-  });
+    const countryData = await getCountryData(countryName);
 
-  module.exports = router;
+    if (!countryData || countryData.length === 0) {
+      res.status(404).json({ message: `No companies found in ${countryName}` });
+      return;
+    }
+
+    res.json(countryData);
+  } catch (error) {
+    console.error('Error retrieving country data:', error);
+    res.status(500).json({ message: 'Internal server error' }); issues
+  }
+});
+
+// Function to retrieve companies by country name
+async function getCountryData(countryName) {
+  const collection = mongoose.connection.collection(collectionName);
+  const countryData = await collection.find({ country:  { $regex: countryName, $options: 'i' } }); 
+  return countryData.toArray(); 
+}
+
+module.exports = router;
