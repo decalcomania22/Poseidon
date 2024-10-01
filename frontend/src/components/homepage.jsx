@@ -14,13 +14,13 @@ function Homepage() {
       <p className="text-lg md:text-xl lg:text-2xl text-white font-['Roboto_Condensed']">Learn, Predict and More..</p>
     </div>
 
-    <form onSubmit={handleSearch} className="mt-8 flex justify-center">
+    <form  className="mt-8 flex justify-center">
       <div className="relative">
         <input
           name="searchtext"
           type="search"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          // value={searchText}
+          // onChange={(e) => setSearchText(e.target.value)}
           placeholder="search company"
           className="px-4 py-2 w-64 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
