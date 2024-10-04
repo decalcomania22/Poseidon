@@ -17,8 +17,8 @@ function SearchResult() {
       <Navbar />
       <div className="mt-20 flex flex-col items-center">
         {companyResults.length > 0 ? (
-          companyResults.map((company, index) => (
-            <div key={index} className='bg-gradient-to-t from-gray-800 to-gray-900 text-white rounded-lg p-4 w-4/5 mb-4 hover:scale-105 transition-transform duration-300' onClick={() => handleCompanyClick(company)}>
+          companyResults.map((company) => (
+            <div key ={company.id} className='bg-gradient-to-t from-gray-800 to-gray-900 text-white rounded-lg p-4 w-4/5 mb-4 hover:scale-105 transition-transform duration-300' onClick={() => handleCompanyClick(company)}>
               {company.company} 
             </div>
           ))

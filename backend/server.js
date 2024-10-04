@@ -8,6 +8,11 @@ const path= require("path")
 const sbcompany = require("./routes/searchCompany.js"); 
 const sbcountry=require("./routes/searchCountry.js");
 const greaterval=require("./routes/greaterval.js");
+// const dotenv = require("dotenv");
+const path = require("path");
+const companySearch = require("./routes/companyInD.js");
+// const countrySearch = require("./routes/searchResult.js");
+const { spawn } = require('child_process'); // Import child_process
 
 
 // dotenv.config();
@@ -52,6 +57,33 @@ mongoose
   // app.set('views', path.join(__dirname, 'views'));
 
 // Routes
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Routes
+app.use("/countries", countrySearch);
+app.use("/companies", companySearch);
+
+// Function to start the Flask app
+function startFlaskApp() {
+  const flaskApp = spawn('python', ['../backend/app.py']); // Adjust the path to your Flask app
+
+  flaskApp.stdout.on('data', (data) => {
+    console.log(`Flask: ${data}`);
+  });
+
+  
+  flaskApp.stderr.on('data', (data) => {
+    console.error(`Flask Error: ${data}`);
+  });
+
+  flaskApp.on('close', (code) => {
+    console.log(`Flask app exited with code ${code}`);
+  });
+}
+
+// Start the Flask app
+startFlaskApp();
 
 app.use("/countries",sbcountry);
 app.use("/companies",sbcompany);

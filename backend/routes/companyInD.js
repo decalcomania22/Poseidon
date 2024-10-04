@@ -15,7 +15,7 @@ router.get('/search', async (req, res) => {
 
     try {
         const companyData = await getCompanyData(companyName);
-        console.log('Company data retrieved:', companyData); // Check what is retrieved
+        //console.log('Company data retrieved:', companyData); 
 
         if (companyData.length === 0) {
             res.render('index', { results: `<p>No data found for ${companyName}</p>` });
@@ -30,71 +30,56 @@ router.get('/search', async (req, res) => {
     }
 });
 
-// Function to connect to MongoDB and retrieve company data
 async function getCompanyData(companyName) {
     const collection = mongoose.connection.collection(collectionName);
     const companyData = await collection.find({ company: { $regex: new RegExp(companyName, "i") } }).toArray();
     return calculateYearlyChanges(companyData.map(convertStringToNumbers));
 }
 
-// Function to clean values and convert shorthand financial representations
 function clean(val) {
-    if (typeof val === 'number') return val; // If already a number, no cleaning required
+    if (typeof val === 'number') return val; 
 
     if (typeof val === 'string') {
-        // Remove non-numeric characters (e.g., "$", ",", etc.)
+    
         val = val.replace(/[^0-9.-MB]+/g, '');
 
-        if (val === '') return null; // If string was empty after cleaning
-
-        // Convert shorthand (M = million, B = billion)
+        if (val === '') return null;
         if (val.endsWith('B')) {
-            return parseFloat(val.slice(0, -1)) * 1e9; // Convert "B" (billion) to number
+            return parseFloat(val.slice(0, -1)) * 1e9; 
         } else if (val.endsWith('M')) {
-            return parseFloat(val.slice(0, -1)) * 1e6; // Convert "M" (million) to number
+            return parseFloat(val.slice(0, -1)) * 1e6; 
         }
 
-        return parseFloat(val); // Convert remaining cleaned string to float
+        return parseFloat(val); 
     }
 
-    return null; // Return null if input can't be cleaned
+    return null; 
 }
-
-// Function to convert string values to numbers
 function convertStringToNumbers(company) {
     const convertFieldsToNumber = (fields) => {
         const numericValues = [];
-
-        // First pass: Collect numeric values and convert strings to numbers
         for (const year in fields) {
             if (fields[year] === "n/a") {
-                numericValues.push(null); // Use null to identify missing values
-            } else {
+                numericValues.push(null);
                 //console.log('Before cleaning:', fields[year]);
                 const number = clean(fields[year]);
                 //console.log('After cleaning:', number);
                 numericValues.push(number);
-                fields[year] = number; // Update the field to the cleaned number
+                fields[year] = number;
             }
         }
 
-        // Calculate mean of numeric values
-        const mean = numericValues.filter(value => value !== null); // Filter out nulls
+        const mean = numericValues.filter(value => value !== null); 
         const sum = mean.reduce((acc, val) => acc + val, 0);
         const meanValue = mean.length > 0 ? sum / mean.length : 0;
-
-        // Second pass: Replace "n/a" with the mean value
         for (const year in fields) {
             if (fields[year] === null) {
-                fields[year] = meanValue; // Replace with mean value
+                fields[year] = meanValue; 
             }
         }
 
         return fields;
     };
-
-    // Assuming company has a structure where fields are years
-    // Call the function to convert fields
     company.fields = convertFieldsToNumber(company.fields);
 
     return {
@@ -175,6 +160,4 @@ function generateTable(data) {
     table += '</tbody></table>';
     return table;
 }
-
-// Export the router
 module.exports = router;
