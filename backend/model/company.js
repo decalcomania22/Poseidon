@@ -73,7 +73,7 @@ const companySchema = new mongoose.Schema({
     2023: { type: Number },
     2024: { type: Number }
   }
-});
+}, { collection: 'company_data' }); // Specify the collection name
 
 const Company = mongoose.model('Company', companySchema);
 

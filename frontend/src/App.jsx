@@ -1,34 +1,24 @@
-import { useState, useEffect } from 'react';
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Homepage from './components/homepage.jsx';
-import SearchResult from './components/search_result.jsx';
-import CompanyQ from './components/company_q.jsx';
+import Homepage from './pages/Homepage.jsx';
+import SearchResult from './pages/search_result.jsx';
+import CompanyQ from './pages/company_q.jsx';
+import Greaterval from './pages/greater_val.jsx';
+
+
 
 function App() {
-  const [companies, setCompanies] = useState([]); // State to hold companies
 
-  // Fetch companies when the search query is provided
-  const fetchCompanies = async (searchText) => {
-    try {
-      const response = await fetch(`/searchresult?searchtext=${searchText}`);
-      const data = await response.json();
-      setCompanies(data); // Set companies in state
-    } catch (error) {
-      console.error('Error fetching companies:', error);
-    }
-  };
-
-  // Optionally, fetch companies when the component loads with an empty search initially
-  useEffect(() => {
-    fetchCompanies(''); // Fetch with an empty search term when the component loads
-  }, []);
+  
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Homepage onSearch={fetchCompanies} />} />
-        <Route path="/searchresult" element={<SearchResult companies={companies} />} />
-        <Route path="/companyq" element={<CompanyQ />} />
+        <Route path="/" element={<Homepage />} />
+        <Route path="/search_res" element={<SearchResult/>}/>
+        <Route path="/company_q" element={<CompanyQ/>}/>
+        <Route path="/greaterval" element={<Greaterval/>}/>
+        
       </Routes>
     </BrowserRouter>
   );

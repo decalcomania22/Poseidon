@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const Company = require('../model/company'); 
 
 const router = express.Router();
-const collectionName = 'poseidon';
 
-router.get('/search', async (req, res) => {
+router.get('/searchbycountry', async (req, res) => {
   const countryName = req.query.country;
 
   try {
@@ -17,16 +17,16 @@ router.get('/search', async (req, res) => {
 
     res.json(countryData);
   } catch (error) {
-    console.error('Error retrieving country data:', error);
-    res.status(500).json({ message: 'Internal server error' }); issues
+    console.error('Error retrieving company data:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
 // Function to retrieve companies by country name
 async function getCountryData(countryName) {
-  const collection = mongoose.connection.collection(collectionName);
-  const countryData = await collection.find({ country:  { $regex: countryName, $options: 'i' } }); 
-  return countryData.toArray(); 
+  // Use the Company model to find the company data
+  const countryData = await Company.find({ country: { $regex: countryName, $options: 'i' } });
+  return countryData;
 }
 
 module.exports = router;
