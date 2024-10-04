@@ -2,37 +2,68 @@ const express = require("express");
 const mongoose = require('mongoose');
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 const path= require("path")
-const companySearch = require("./routes/companyInD.js");
-const countrySearch = require("./routes/searchResult.js");
-//const { connectToDatabase, getDatabase } = require('./db.js');
+// const companySearch = require("./routes/companyInD.js");
+const sbcompany = require("./routes/searchCompany.js"); 
+const sbcountry=require("./routes/searchCountry.js");
+const greaterval=require("./routes/greaterval.js");
 
-dotenv.config();
+
+// dotenv.config();
 
 const app = express();
-const port =process.env.PORT|| 3001;
+const port = 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
+// app.use(express.static(path.join(__dirname, '../frontend')));
+
+// // Middleware to serve .jsx files as JavaScript
+// app.use((req, res, next) => {
+//   if (req.url.endsWith('.jsx')) {
+//     res.setHeader('Content-Type', 'application/javascript');
+//   }
+//   next();
+// });
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Handle all other routes by sending the index.html from the build folder
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/dist', 'index.html'));
+});
+
+
+//const URI="mongodb+srv://Suhani:Password1234@freecluster.7js40.mongodb.net/poseidon?retryWrites=true&w=majority&appName=freecluster";
+
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/compdb", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+  .connect("mongodb+srv://Suhani:Password1234@freecluster.7js40.mongodb.net/poseidon?retryWrites=true&w=majority&appName=freecluster"
+  )
+  .then(() => {console.log("MongoDB connected");
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}).catch((err)=> console.log("could not connect to db",err));
 
-  app.set('view engine', 'ejs');
-  app.set('views', path.join(__dirname, 'views'));
+  // app.set('view engine', 'ejs');
+  // app.set('views', path.join(__dirname, 'views'));
 
 // Routes
-//app.use("/api/country", countrySearch);
-app.use("/countries",countrySearch);
-app.use("/companies",companySearch);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.use("/countries",sbcountry);
+app.use("/companies",sbcompany);
+
+app.use("/getHigherValues",greaterval);
+
+
+
+
+
+
+
+
+
+
