@@ -33,19 +33,13 @@ app.use(bodyParser.json());
 //   next();
 // });
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-// Handle all other routes by sending the index.html from the build folder
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../frontend/dist', 'index.html'));
-});
 
 
 //const URI="mongodb+srv://Suhani:Password1234@freecluster.7js40.mongodb.net/poseidon?retryWrites=true&w=majority&appName=freecluster";
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb+srv://Suhani:Password1234@freecluster.7js40.mongodb.net/poseidon?retryWrites=true&w=majority&appName=freecluster"
+  .connect("mongodb://localhost:27017/compdb"
   )
   .then(() => {console.log("MongoDB connected");
   app.listen(port, () => {
@@ -83,14 +77,18 @@ function startFlaskApp() {
 }
 
 // Start the Flask app
-startFlaskApp();
+//startFlaskApp();
 
 app.use("/countries",sbcountry);
 app.use("/companies",sbcompany);
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Handle all other routes by sending the index.html from the build folder
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../frontend/dist', 'index.html'));
+});
 
 app.use("/getHigherValues",greaterval);
-
-
 
 
 
