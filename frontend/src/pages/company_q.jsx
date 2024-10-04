@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import Navbar from '../components/navbar.jsx'
-const navigate = useNavigate();
+import Navbar from '../components/navbar.jsx';
+import { useNavigate } from 'react-router-dom'; 
+
 import { useLocation } from 'react-router-dom';
 
 import axios from 'axios';
 
+
 function CompanyQ() {
-  const [selectedOption, setSelectedOption] = useState('')
+  const [selectedOption, setSelectedOption] = useState('');
+  const navigate = useNavigate();
   const location = useLocation(); // Get location object
   const { company } = location.state; // Extract company from location state
 

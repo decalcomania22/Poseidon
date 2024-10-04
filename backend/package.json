@@ -4,9 +4,8 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "nodemon backend/server.js",
-        "start:flask": "python backend/app.py", 
-    "dev": "concurrently \"npm run start\" \"npm run start:flask\""
+    "start": "node backend/server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

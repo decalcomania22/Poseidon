@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/search_res" element={<SearchResult/>}/>
+        <Route path="/searchresult" element={<SearchResult/>}/>
         <Route path="/company_q" element={<CompanyQ/>}/>
         <Route path="/greaterval" element={<Greaterval/>}/>
         

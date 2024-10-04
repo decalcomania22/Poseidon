@@ -9,9 +9,9 @@ const sbcompany = require("./routes/searchCompany.js");
 const sbcountry=require("./routes/searchCountry.js");
 const greaterval=require("./routes/greaterval.js");
 // const dotenv = require("dotenv");
-const path = require("path");
+// const path = require("path");
 const companySearch = require("./routes/companyInD.js");
-// const countrySearch = require("./routes/searchResult.js");
+
 const { spawn } = require('child_process'); // Import child_process
 
 
@@ -61,8 +61,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routes
-app.use("/countries", countrySearch);
-app.use("/companies", companySearch);
+// app.use("/countries", countrySearch);
+// app.use("/companies", companySearch);
 
 // Function to start the Flask app
 function startFlaskApp() {

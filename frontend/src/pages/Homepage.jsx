@@ -3,7 +3,7 @@ import stockvideo from '../assets/text.mp4'
 import Navbar from '../components/navbar.jsx'
 import { useState } from 'react'
 import axios from 'axios';
-import SearchResult from './search_result.jsx';
+//import SearchResult from './search_result.jsx';
 import { useNavigate } from 'react-router-dom'; 
 
 function Homepage() {
@@ -16,6 +16,7 @@ const [searchedcompany,setSearchByCompany]=useState("");
 const [searchedcountry,setSearchByCountry]=useState("");
 const [companyResults,setCompanyResults]=useState([]);
 // const [searchsubmit,setSearchSubmit]=usestate(false);
+const navigate = useNavigate();
 
 
 
@@ -24,12 +25,12 @@ const [companyResults,setCompanyResults]=useState([]);
 
 const handleSearchByCountry=(e)=>{
   e.preventDefault();
-  axios.get(`/companies/searchbycountry?country=${searchedcountry}`)
+  axios.get(`/countries/searchbycountry?country=${searchedcountry}`)
     .then((res) => {
         
-        setCompanyResults(res.data);
+        setCountryResults(res.data);
         console.log(res.data);
-        navigate('/search_res', { state: { companyResults: res.data } }); 
+        navigate('/searchresult', { state: { countryResults: res.data } }); 
         // setSearchSubmit(true);
         
        
@@ -48,8 +49,7 @@ const handleSearchByCompany=(e)=>{
         console.log(res.data);
         navigate('/searchresult', { state: { companyResults: res.data } }); 
         // setSearchSubmit(true);
-        
-       
+           
     })
     .catch(error => {
         console.log(error); // Log any error that occurs during the API request
