@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "nodemon backend/server.js",
-    "start:flask": "python ..backend/app.py",
+        "start:flask": "python backend/app.py", 
     "dev": "concurrently \"npm run start\" \"npm run start:flask\""
   },
   "keywords": [],
@@ -26,8 +26,5 @@
     "nodemon": "^3.1.7",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13"
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.1"
   }
 }
