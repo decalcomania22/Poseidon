@@ -16,8 +16,8 @@ app.use(
 //     next();
 //   });
 const connectDB=require("./db/connectDB.js");
-const dotenv=require("dotenv");
-dotenv.config();
+// const dotenv=require("dotenv");
+// dotenv.config();
 // const authroutes=require("./routes/authRoute.js");
 // app.use("/api/auth",authroutes);
 app.set("view engine","ejs");
