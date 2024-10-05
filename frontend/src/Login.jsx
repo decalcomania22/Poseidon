@@ -101,7 +101,7 @@ function Login() {
               <a href="#">Forgot Password?</a>
             </div>
             <button type="submit">Login</button>
-            <div>
+            <div className="mt-5">
           <button onClick={hanelegooglelogin}>Login With google</button>
         </div>
             <div className="register-link">
@@ -154,7 +154,7 @@ function Login() {
               </label>
             </div>
             <button type="submit">Register</button>
-            <div>
+            <div className="mt-3">
           <button onClick={handlegooglesignup}>signup With google</button>
         </div>
             <div className="register-link">

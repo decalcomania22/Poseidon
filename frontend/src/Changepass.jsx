@@ -33,13 +33,35 @@ function Changepass(){
         }
     }
     return(
-        <>
-        <form onSubmit={submitotp}>
-        <label htmlFor="tempotp">Enter Otp here</label>
-            <input name="tempotp" id="tempotp" type="password" onChange={handleinput} value={ip} ></input>
-        <button type="submit">Submit</button>
-        </form>
-        </>
+        
+<>
+  <form onSubmit={submitotp} className="bg-gray-200 p-6 rounded-lg shadow-md max-w-sm mx-auto">
+    <div className="mb-4">
+      <label htmlFor="tempotp" className="block text-gray-800 font-medium mb-2">
+        Enter OTP here
+      </label>
+      <input
+        name="tempotp"
+        id="tempotp"
+        type="password"
+        onChange={handleinput}
+        value={ip}
+        className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
+        placeholder="Enter OTP"
+      />
+    </div>
+    <button
+      type="submit"
+      className="w-full bg-gray-800 text-white font-medium py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
+    >
+      Submit
+    </button>
+  </form>
+</>
+
+
+
+      
     )
 }
 export default Changepass;

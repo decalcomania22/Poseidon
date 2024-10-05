@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react'
 import './App.css'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Login from './login'
+import Login from './Login'
 import Otp from './Otp';
 import Home from './Home';
 import Changepass from './Changepass';
