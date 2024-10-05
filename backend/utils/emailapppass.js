@@ -1,1 +1,1 @@
-module.exports=is there in env file;
+emailAppPass="wafz ljlw awnb fsdl"
