@@ -1,1 +1,1 @@
-module.exports="wafz ljlw awnb fsdl";
+module.exports=is there in env file;

@@ -165,13 +165,9 @@ app.get('/auth/google/callback',
         passport.authenticate('google', { failureRedirect: '/login' }),
         async function(req, res) {
             console.log("again",req.user);
-        res.redirect(`http://localhost:5173/otp/${req.user.verifyuserId}`);////ejs se render karne ke  liye pahle likha tha
-        // res.status(201).json({verifyuserid:req.user.verifyuserId,message:"registered but email verification remaining"});
+        res.redirect(`http://localhost:5173/otp/${req.user.verifyuserId}`);
     });
-//////////////////////////////////
-///////////////linkedin auth routes
 
-///////////////////////////
 
 
 app.post("/signup",async(req,res)=>{
@@ -252,7 +248,7 @@ app.post("/:id/emailverification",async(req,res)=>{
 app.get("/:id/updatepass",(req,res)=>{
     const verifyuserid=generateverifyemail(email,false);
     res.status(201).json({verifyuserid:verifyuserid});
-})
+});
 app.post("/:id/updatepass",async(req,res)=>{
     const {id}=req.params;
     const {newpass}=req.body;
